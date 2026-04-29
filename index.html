@@ -1154,16 +1154,16 @@
 
 <script>
   // ── Firebase setup ────────────────────────────────────────────────
-const firebaseConfig = {
-  apiKey: (typeof CONFIG !== 'undefined') ? CONFIG.FIREBASE_KEY : '',
-  authDomain: "e85-radar.firebaseapp.com",
-  databaseURL: "https://e85-radar-default-rtdb.firebaseio.com",
-  projectId: "e85-radar",
-  storageBucket: "e85-radar.firebasestorage.app",
-  messagingSenderId: "852418099897",
-  appId: "1:852418099897:web:1a33784f27563c9dc97968",
-  measurementId: "G-MM7MTLMK3Q"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyDr7ftaET1iemWG9xKnyDwRMSwD_MUYHJ4",
+    authDomain: "e85-radar.firebaseapp.com",
+    databaseURL: "https://e85-radar-default-rtdb.firebaseio.com",
+    projectId: "e85-radar",
+    storageBucket: "e85-radar.firebasestorage.app",
+    messagingSenderId: "852418099897",
+    appId: "1:852418099897:web:1a33784f27563c9dc97968",
+    measurementId: "G-MM7MTLMK3Q"
+  };
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
@@ -1338,24 +1338,33 @@ const firebaseConfig = {
   // ── Map setup ─────────────────────────────────────────────────────
   function initMap(lat, lon) {
     if (!leafletMap) {
-      leafletMap = L.map('map', { zoomControl: true, attributionControl: false }).setView([lat, lon], 10);
+      leafletMap = L.map('map', { zoomControl: true, attributionControl: false }).setView([lat, lon], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(leafletMap);
     } else {
-      leafletMap.setView([lat, lon], 10);
+      leafletMap.setView([lat, lon], 12);
     }
 
     // Remove old user marker
     if (userMarker) leafletMap.removeLayer(userMarker);
-    userMarker = L.circleMarker([lat, lon], {
-      radius: 8,
+
+    // Outer pulse ring for visibility
+    L.circleMarker([lat, lon], {
+      radius: 16,
       fillColor: '#EF9F27',
-      color: '#0e0d0b',
-      weight: 2,
+      color: '#EF9F27',
+      weight: 1,
+      fillOpacity: 0.15,
+    }).addTo(leafletMap);
+
+    userMarker = L.circleMarker([lat, lon], {
+      radius: 10,
+      fillColor: '#EF9F27',
+      color: '#ffffff',
+      weight: 2.5,
       fillOpacity: 1,
       zIndexOffset: 1000
-    }).addTo(leafletMap).bindPopup('<div style="color:#EF9F27;font-family:monospace;font-size:11px;">YOU ARE HERE</div>');
+    }).addTo(leafletMap).bindPopup('<div style="color:#EF9F27;font-family:monospace;font-size:11px;font-weight:bold;">YOU ARE HERE</div>');
 
-    // Draw radius circle
     drawRadiusCircle(lat, lon);
   }
 
@@ -1365,12 +1374,15 @@ const firebaseConfig = {
     radiusCircle = L.circle([lat, lon], {
       radius: radiusMeters,
       color: '#EF9F27',
-      weight: 1.5,
-      opacity: 0.5,
+      weight: 2,
+      opacity: 0.7,
       fillColor: '#EF9F27',
-      fillOpacity: 0.04,
-      dashArray: '6 4'
+      fillOpacity: 0.06,
+      dashArray: '8 5'
     }).addTo(leafletMap);
+
+    // Zoom map to fit the radius circle snugly
+    leafletMap.fitBounds(radiusCircle.getBounds(), { padding: [24, 24] });
 
     // Show legend
     document.getElementById('mapLegend').style.display = 'flex';
@@ -1521,12 +1533,6 @@ const firebaseConfig = {
       setStatus(`${mapCount} stations on map · ${listCount} within ${radius} mi`, 'done');
       renderStations(inRadius);
       updateMapMarkers();
-
-      // Fit map to show all markers
-      if (all.length > 0) {
-        const bounds = L.latLngBounds([[lat, lon], ...all.map(s => [s.latitude, s.longitude])]);
-        leafletMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 12 });
-      }
     } catch {
       setStatus('API error — check key or connection.', 'err');
       document.getElementById('findBtn').disabled = false;
@@ -1681,6 +1687,7 @@ const firebaseConfig = {
       showToast('Failed to submit — check connection');
     }
   }
+
   // ── Blend Calculator ─────────────────────────────────────────────
   function openCalc() {
     document.getElementById('calcOverlay').style.display = 'block';
