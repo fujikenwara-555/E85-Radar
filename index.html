@@ -1295,6 +1295,9 @@
       const inRadius = stations.filter(s => s._dist <= radius);
       setStatus(`${stations.length} stations on map · ${inRadius.length} within ${radius} mi`, 'done');
       renderStations(inRadius);
+      setTimeout(() => {
+        if (radiusCircle) leafletMap.fitBounds(radiusCircle.getBounds(), { padding: [28, 28] });
+      }, 100);
     }
   }
 
@@ -1371,18 +1374,24 @@
   function drawRadiusCircle(lat, lon) {
     if (radiusCircle) leafletMap.removeLayer(radiusCircle);
     const radiusMeters = radius * 1609.34;
+
+    // Create a pane above tiles so the circle isn't affected by the tile dark filter
+    if (!leafletMap.getPane('circlePane')) {
+      leafletMap.createPane('circlePane');
+      leafletMap.getPane('circlePane').style.zIndex = 450;
+      leafletMap.getPane('circlePane').style.pointerEvents = 'none';
+    }
+
     radiusCircle = L.circle([lat, lon], {
       radius: radiusMeters,
+      pane: 'circlePane',
       color: '#EF9F27',
-      weight: 2,
-      opacity: 0.7,
+      weight: 2.5,
+      opacity: 1,
       fillColor: '#EF9F27',
       fillOpacity: 0.06,
       dashArray: '8 5'
     }).addTo(leafletMap);
-
-    // Zoom map to fit the radius circle snugly
-    leafletMap.fitBounds(radiusCircle.getBounds(), { padding: [24, 24] });
 
     // Show legend
     document.getElementById('mapLegend').style.display = 'flex';
@@ -1533,6 +1542,11 @@
       setStatus(`${mapCount} stations on map · ${listCount} within ${radius} mi`, 'done');
       renderStations(inRadius);
       updateMapMarkers();
+
+      // Zoom to radius circle after everything renders — delayed so nothing overrides it
+      setTimeout(() => {
+        if (radiusCircle) leafletMap.fitBounds(radiusCircle.getBounds(), { padding: [28, 28] });
+      }, 200);
     } catch {
       setStatus('API error — check key or connection.', 'err');
       document.getElementById('findBtn').disabled = false;
