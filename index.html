@@ -268,8 +268,8 @@
       z-index: 1;
     }
 
-    /* Override Leaflet tiles to dark */
-    .leaflet-tile { filter: brightness(0.7) saturate(0.6) hue-rotate(180deg) invert(1); }
+    /* Override Leaflet tiles to dark — only target img tiles not SVG overlays */
+    .leaflet-tile-pane .leaflet-tile { filter: brightness(0.7) saturate(0.6) hue-rotate(180deg) invert(1); }
     .leaflet-container { background: var(--bg); }
 
     /* Corn marker */
@@ -1375,16 +1375,8 @@
     if (radiusCircle) leafletMap.removeLayer(radiusCircle);
     const radiusMeters = radius * 1609.34;
 
-    // Create a pane above tiles so the circle isn't affected by the tile dark filter
-    if (!leafletMap.getPane('circlePane')) {
-      leafletMap.createPane('circlePane');
-      leafletMap.getPane('circlePane').style.zIndex = 450;
-      leafletMap.getPane('circlePane').style.pointerEvents = 'none';
-    }
-
     radiusCircle = L.circle([lat, lon], {
       radius: radiusMeters,
-      pane: 'circlePane',
       color: '#EF9F27',
       weight: 2.5,
       opacity: 1,
