@@ -1080,10 +1080,11 @@
 <!-- MAP VIEW -->
 <div id="mapView" class="active">
   <div class="map-legend" id="mapLegend" style="display:none">
-    <span class="legend-item"><span class="legend-dot" style="background:#5DCAA5"></span>E70+ high</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>E40–69 mid</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>E0–39 low</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#7a7060"></span>no report</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#5DCAA5"></span>E75+ great</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>E50–74 mid</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>E1–49 low</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#555"></span>E0 fleet</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#7a7060"></span>unrated</span>
     <span id="legendRadius" style="margin-left:auto"></span>
   </div>
   <div id="map"></div>
@@ -1403,28 +1404,71 @@
       const latest = latestRating(s.id);
       const pct    = latest ? latest.pct : null;
 
-      // Build corn icon HTML
-      const ratedClass = pct === null ? '' : pct >= 70 ? 'rated-high' : pct < 40 ? 'rated-low' : '';
-      const label = pct !== null ? `🌽 E${pct}` : '🌽';
-      const stemClass = ratedClass;
+      // Color based on ethanol content
+      let color, borderColor, label, ratedClass;
+      if (pct === null) {
+        color = '#7a7060';
+        borderColor = '#3d3826';
+        label = '⛽';
+        ratedClass = '';
+      } else if (pct === 0) {
+        color = '#555';
+        borderColor = '#333';
+        label = 'E0';
+        ratedClass = 'rated-none';
+      } else if (pct >= 75) {
+        color = '#5DCAA5';
+        borderColor = '#3a8a6e';
+        label = `E${pct}`;
+        ratedClass = 'rated-high';
+      } else if (pct >= 50) {
+        color = '#EF9F27';
+        borderColor = '#BA7517';
+        label = `E${pct}`;
+        ratedClass = 'rated-mid';
+      } else {
+        color = '#E24B4A';
+        borderColor = '#a03030';
+        label = `E${pct}`;
+        ratedClass = 'rated-low';
+      }
 
       const iconHtml = `
-        <div class="corn-marker">
-          <div class="corn-bubble ${ratedClass}">${label}</div>
-          <div class="corn-stem ${stemClass}"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;">
+          <div style="
+            background:#161411;
+            border:2px solid ${borderColor};
+            border-radius:6px;
+            padding:3px 7px;
+            font-family:'Bebas Neue',sans-serif;
+            font-size:13px;
+            letter-spacing:1px;
+            color:${color};
+            white-space:nowrap;
+            line-height:1.2;
+            text-align:center;
+            box-shadow:0 2px 6px rgba(0,0,0,0.5);
+          ">${label}</div>
+          <div style="width:2px;height:5px;background:${borderColor};"></div>
         </div>`;
 
       const icon = L.divIcon({
         html: iconHtml,
         className: '',
-        iconAnchor: [30, 30],
-        iconSize: [60, 36]
+        iconAnchor: [28, 28],
+        iconSize: [56, 34]
       });
+
+      const ethLine = pct === null
+        ? 'No ratings yet'
+        : pct === 0
+        ? 'E0 — Fleet/Gov only, not public'
+        : `Latest: E${pct} · ${relAge(latest.ts)}`;
 
       const popupContent = `
         <div class="popup-name">${s.station_name}</div>
         <div class="popup-addr">${s.street_address}, ${s.city}</div>
-        <div class="popup-eth">${pct !== null ? `Latest: E${pct} · ${relAge(latest.ts)}` : 'No ratings yet'}</div>
+        <div class="popup-eth" style="color:${color}">${ethLine}</div>
         <button class="popup-scroll" onclick="window.scrollToCard(${s.id})">View details ↓</button>`;
 
       const marker = L.marker([s.latitude, s.longitude], { icon })
