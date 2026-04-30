@@ -1436,24 +1436,26 @@
   }
 
   window.scrollToCard = function(id) {
-    // Switch to list view first
     switchView('list');
-    // Render stations if list is empty
-    if (!document.getElementById('card-' + id)) {
-      const inRadius = stations.filter(s => s._dist <= radius);
-      renderStations(inRadius);
+
+    // Check if card exists in current list
+    let card = document.getElementById('card-' + id);
+
+    // If not in list (station outside radius), render all stations temporarily
+    if (!card) {
+      renderStations(stations); // render all, not just in-radius
+      card = document.getElementById('card-' + id);
     }
-    // Wait for render then scroll
+
     setTimeout(() => {
-      const card = document.getElementById('card-' + id);
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Flash the card border to highlight it
-        card.style.borderColor = 'var(--amber)';
-        card.style.boxShadow = '0 0 0 2px rgba(239,159,39,0.4)';
+      const target = document.getElementById('card-' + id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.style.borderColor = 'var(--amber)';
+        target.style.boxShadow = '0 0 0 2px rgba(239,159,39,0.4)';
         setTimeout(() => {
-          card.style.borderColor = '';
-          card.style.boxShadow = '';
+          target.style.borderColor = '';
+          target.style.boxShadow = '';
         }, 2000);
       }
     }, 150);
