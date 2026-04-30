@@ -983,54 +983,83 @@
   </div>
 
   <!-- Full width tagline banner -->
-  <div style="
-    margin: 0 -18px;
-    padding: 6px 18px;
-    background: var(--bg3);
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  ">
-    <span style="font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;">E85 Locator</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;">·</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Community Ethanol Ratings</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;">·</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Beta</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;">·</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Free to Use</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;">·</span>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">No Account Needed</span>
+  <div style="margin:0 -18px;padding:6px 18px;background:var(--bg3);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+      <span style="font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;">E85 Locator</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);">·</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Community Ethanol Ratings</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);">·</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Beta</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);">·</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Free to Use</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);">·</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">No Account Needed</span>
+    </div>
+    <button onclick="openInstructions()" style="background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:var(--mono);font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:3px;cursor:pointer;white-space:nowrap;flex-shrink:0;text-transform:uppercase;">? How to use</button>
   </div>
 </header>
 
-<!-- WELCOME BANNER -->
-<div id="welcomeBanner">
-  <div class="banner-title">Welcome to E85 Radar Beta</div>
-  <div class="banner-items">
-    <div class="banner-item">
-      <span class="banner-icon">📍</span>
-      <span>Allow location access when prompted. On iPhone, you may need to enable it in Settings → Privacy & Security → Location Services → Safari as well as in Safari itself.</span>
+<!-- INSTRUCTIONS MODAL -->
+<div id="instructionsOverlay" onclick="if(event.target===this)closeInstructions()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:600;overflow-y:auto;padding:24px 16px;">
+  <div style="background:var(--bg2);border:1px solid var(--border-hot);border-radius:10px;padding:22px;max-width:440px;margin:0 auto;">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--amber);">How to use E85 Radar</div>
+      <button onclick="closeInstructions()" style="background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:14px;width:28px;height:28px;border-radius:4px;cursor:pointer;">✕</button>
     </div>
-    <div class="banner-item">
-      <span class="banner-icon">⚗️</span>
-      <span>Rate carefully. Ethanol reports can't be deleted individually, your report stays on the timeline permanently, so only submit after a good test.</span>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:20px;flex-shrink:0;">📍</span>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase;margin-bottom:4px;">Location Access</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Allow location when prompted. On iPhone go to Settings → Privacy & Security → Location Services → Safari and enable it there as well as in Safari itself.</div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:20px;flex-shrink:0;">🗺️</span>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase;margin-bottom:4px;">Map Icons</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">
+            <span style="color:#5DCAA5;">Green</span> = E75+ great &nbsp;·&nbsp;
+            <span style="color:#EF9F27;">Amber</span> = E50–74 mid &nbsp;·&nbsp;
+            <span style="color:#E24B4A;">Red</span> = E1–49 low<br>
+            <span style="color:#555;">⛽</span> = unrated &nbsp;·&nbsp;
+            <span style="color:#555;">🔒</span> = fleet/gov only, not public
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:20px;flex-shrink:0;">⚗️</span>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase;margin-bottom:4px;">Rating Ethanol Content</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">After fueling, tap a station card and slide to your actual ethanol %. Reports are permanent and shared with everyone — rate carefully and only after a good test.</div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:20px;flex-shrink:0;">⚡</span>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase;margin-bottom:4px;">Blend Calculator</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Tap Fuel Blend Calculator in the header. Enter your tank size, current fuel level and E%, and target E% to get exact gallons of E85 and pump gas to add.</div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:20px;flex-shrink:0;">🔒</span>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase;margin-bottom:4px;">Privacy</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">No account needed. No personal data collected. Ratings are anonymous and community-owned. Free to use — not affiliated with any fuel brand or station.</div>
+        </div>
+      </div>
+
     </div>
-    <div class="banner-item">
-      <span class="banner-icon">🔒</span>
-      <span>No data collected. Ratings are stored only in your browser's local storage, nothing is sent to a server or tied to your identity.</span>
-    </div>
-    <div class="banner-item">
-      <span class="banner-icon">⚡</span>
-      <span>Free to use. This is an independent beta tool for the flex fuel community. Not affiliated with any fuel brand or station.</span>
-    </div>
-    <div class="banner-item">
-      <span class="banner-icon">🧪</span>
-      <span>Beta software. Expect occasional bugs. Station data comes from the U.S. DOE Alternative Fuels Station database.</span>
-    </div>
+
+    <button onclick="closeInstructions()" style="margin-top:18px;width:100%;padding:12px;background:var(--amber);color:#0e0d0b;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;border:none;border-radius:4px;cursor:pointer;">GOT IT — FIND E85</button>
   </div>
-  <button class="banner-dismiss" onclick="dismissBanner()">GOT IT — FIND E85</button>
 </div>
 
 <!-- CONTROLS -->
@@ -1083,7 +1112,7 @@
     <span class="legend-item"><span class="legend-dot" style="background:#5DCAA5"></span>E75+ great</span>
     <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>E50–74 mid</span>
     <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>E1–49 low</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#555"></span>E0 fleet</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>✕ fleet/gov</span>
     <span class="legend-item"><span class="legend-dot" style="background:#7a7060"></span>unrated</span>
     <span id="legendRadius" style="margin-left:auto"></span>
   </div>
@@ -1268,14 +1297,21 @@
     setTimeout(() => t.classList.remove('show'), 2600);
   }
 
-  // ── Banner ────────────────────────────────────────────────────────
-  function dismissBanner() {
-    document.getElementById('welcomeBanner').style.display = 'none';
+  // ── Instructions modal ────────────────────────────────────────────
+  function openInstructions() {
+    document.getElementById('instructionsOverlay').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeInstructions() {
+    document.getElementById('instructionsOverlay').style.display = 'none';
+    document.body.style.overflow = '';
     localStorage.setItem('e85r_welcomed', '1');
   }
 
-  if (localStorage.getItem('e85r_welcomed')) {
-    document.getElementById('welcomeBanner').style.display = 'none';
+  // Show on first visit
+  if (!localStorage.getItem('e85r_welcomed')) {
+    openInstructions();
   }
 
   // ── View toggle ───────────────────────────────────────────────────
@@ -1412,9 +1448,9 @@
         label = '⛽';
         ratedClass = '';
       } else if (pct === 0) {
-        color = '#555';
-        borderColor = '#333';
-        label = 'E0';
+        color = '#E24B4A';
+        borderColor = '#a03030';
+        label = '✕ NO E85';
         ratedClass = 'rated-none';
       } else if (pct >= 75) {
         color = '#5DCAA5';
