@@ -268,8 +268,12 @@
       z-index: 1;
     }
 
-    /* Override Leaflet tiles to dark — only target img tiles not SVG overlays */
-    .leaflet-tile-pane .leaflet-tile { filter: brightness(0.7) saturate(0.6) hue-rotate(180deg) invert(1); }
+    /* Override Leaflet tiles to dark — explicitly only tile images */
+    .leaflet-tile-pane img { filter: brightness(0.7) saturate(0.6) hue-rotate(180deg) invert(1); }
+    .leaflet-marker-pane,
+    .leaflet-overlay-pane,
+    .leaflet-shadow-pane,
+    .leaflet-popup-pane { filter: none !important; }
     .leaflet-container { background: var(--bg); }
 
     /* Corn marker */
@@ -1169,8 +1173,9 @@
   const db = firebase.database();
 
   // ── NREL key from config.js (gitignored) ─────────────────────────
-  const NREL_KEY   = 'BCO1aFMDzr1i6zx8JiFPSCiJmeOGoseaar45NgqJ';
-const IPINFO_KEY = (typeof CONFIG !== 'undefined' && CONFIG.IPINFO_KEY) ? CONFIG.IPINFO_KEY : '';
+  const NREL_KEY   = (typeof CONFIG !== 'undefined' && CONFIG.NREL_KEY)   ? CONFIG.NREL_KEY   : 'DEMO_KEY';
+  const IPINFO_KEY = (typeof CONFIG !== 'undefined' && CONFIG.IPINFO_KEY) ? CONFIG.IPINFO_KEY : '';
+
   // ── State ─────────────────────────────────────────────────────────
   let radius    = 10;
   let sortMode  = 'distance';
@@ -1420,7 +1425,7 @@ const IPINFO_KEY = (typeof CONFIG !== 'undefined' && CONFIG.IPINFO_KEY) ? CONFIG
         <div class="popup-name">${s.station_name}</div>
         <div class="popup-addr">${s.street_address}, ${s.city}</div>
         <div class="popup-eth">${pct !== null ? `Latest: E${pct} · ${relAge(latest.ts)}` : 'No ratings yet'}</div>
-        <button class="popup-scroll" onclick="scrollToCard(${s.id})">View details ↓</button>`;
+        <button class="popup-scroll" onclick="window.scrollToCard(${s.id})">View details ↓</button>`;
 
       const marker = L.marker([s.latitude, s.longitude], { icon })
         .addTo(leafletMap)
@@ -1430,12 +1435,28 @@ const IPINFO_KEY = (typeof CONFIG !== 'undefined' && CONFIG.IPINFO_KEY) ? CONFIG
     });
   }
 
-  function scrollToCard(id) {
+  window.scrollToCard = function(id) {
+    // Switch to list view first
     switchView('list');
+    // Render stations if list is empty
+    if (!document.getElementById('card-' + id)) {
+      const inRadius = stations.filter(s => s._dist <= radius);
+      renderStations(inRadius);
+    }
+    // Wait for render then scroll
     setTimeout(() => {
       const card = document.getElementById('card-' + id);
-      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Flash the card border to highlight it
+        card.style.borderColor = 'var(--amber)';
+        card.style.boxShadow = '0 0 0 2px rgba(239,159,39,0.4)';
+        setTimeout(() => {
+          card.style.borderColor = '';
+          card.style.boxShadow = '';
+        }, 2000);
+      }
+    }, 150);
   }
 
   // ── City search ───────────────────────────────────────────────────
