@@ -1449,8 +1449,14 @@
       const target = document.getElementById('card-' + sid);
       if (target) {
         // Scroll with offset so card isn't hidden behind sticky header
-        const headerHeight = document.querySelector('header').offsetHeight + 8;
-        const cardTop = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+        // Measure all fixed top elements
+        const header = document.querySelector('header').offsetHeight;
+        const controls = document.querySelector('.controls').offsetHeight;
+        const searchRow = document.querySelector('.search-row').offsetHeight;
+        const viewToggle = document.querySelector('.view-toggle').offsetHeight;
+        const statusBar = document.querySelector('#statusBar').offsetHeight;
+        const totalOffset = header + controls + searchRow + viewToggle + statusBar + 12;
+        const cardTop = target.getBoundingClientRect().top + window.scrollY - totalOffset;
         window.scrollTo({ top: cardTop, behavior: 'smooth' });
 
         target.style.transition = 'border-color 0.2s, box-shadow 0.2s';
