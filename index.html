@@ -1716,12 +1716,12 @@
           <div class="eth-slider-wrap">
             <div class="eth-slider-top">
               <div class="eth-slider-readout" id="sliderval-${id}">E50</div>
-              <div class="eth-slider-hint">E0 = gasoline<br>E85 = standard flex<br>E100 = pure ethanol</div>
+              <div class="eth-slider-hint">E0 = no ethanol access ✕<br>E85 = standard flex fuel</div>
             </div>
-            <input type="range" class="eth-slider" min="0" max="100" value="50" step="1"
+            <input type="range" class="eth-slider" min="0" max="100" value="85" step="1"
               id="slider-${id}" oninput="updateSlider(${id}, this.value)">
             <div class="eth-tick-row">
-              <span>E0</span><span>E25</span><span>E50</span><span>E75</span><span>E100</span>
+              <span>E0 ✕</span><span>E25</span><span>E50</span><span>E75</span><span>E100</span>
             </div>
           </div>
           <button class="submit-inline" onclick="submitRating(${id}, '${s.station_name}', '${s.city}', '${s.state}')">
@@ -1778,10 +1778,11 @@
 
   function updateSlider(id, val) {
     const el = document.getElementById('sliderval-' + id);
-    el.textContent = 'E' + val;
-    el.style.color = val >= 70 ? 'var(--green)' : val >= 40 ? 'var(--amber)' : 'var(--red)';
+    const num = parseInt(val);
+    el.textContent = num === 0 ? 'E0 ✕' : 'E' + num;
+    el.style.color = num === 0 ? 'var(--red)' : num >= 70 ? 'var(--green)' : num >= 40 ? 'var(--amber)' : 'var(--red)';
     document.getElementById('slider-' + id).style.background =
-      `linear-gradient(to right, var(--green) ${val}%, var(--text-dim) ${val}%)`;
+      `linear-gradient(to right, ${num === 0 ? '#E24B4A' : 'var(--green)'} ${num}%, var(--text-dim) ${num}%)`;
   }
 
   async function submitRating(id, name, city, state) {
