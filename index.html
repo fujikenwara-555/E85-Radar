@@ -1202,7 +1202,7 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  const NRL_KEY   = 'BCO1aFMDzr1i6zx8JiFPSCiJmeOGoseaar45NgqJ';
+  const NREL_KEY   = 'BCO1aFMDzr1i6zx8JiFPSCiJmeOGoseaar45NgqJ';
   const IPINFO_KEY = (typeof CONFIG !== 'undefined' && CONFIG.IPINFO_KEY) ? CONFIG.IPINFO_KEY : '';
 
   // ── State ─────────────────────────────────────────────────────────
@@ -1617,8 +1617,8 @@
     initMap(lat, lon);
 
     // Always fetch 200mi so map shows full context — list filtered by selected radius
-    const url = `https://developer.nrl.gov/api/alt-fuel-stations/v1/nearest.json` +
-      `?fuel_type=E85&latitude=${lat}&longitude=${lon}&radius=200&limit=100&api_key=${NRL_KEY}`;
+    const url = `https://developer.nrel.gov/api/alt-fuel-stations/v1/nearest.json` +
+      `?fuel_type=E85&latitude=${lat}&longitude=${lon}&radius=200&limit=100&api_key=${NREL_KEY}`;
 
     try {
       const res  = await fetch(url);
