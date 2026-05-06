@@ -1,7 +1,7 @@
 # E85-Radar
 E85 station locator with community ethanol content ratings. Built with the NREL Alternative Fuels API and Firebase.
 
-**Live app → [fujikenwara-555.github.io/e85-radar](https://fujikenwara-555.github.io/e85-radar/)**
+**Live app → [fujikenwara-555.github.io/e85-radar](https://fujikenwara-555.github.io/A85-radar/)**
 
 E85 station locator built for the flex fuel community. Find stations near you, see real ethanol content reported by other E85 drivers, and know what you're actually getting at the pump before you pull in.
 
